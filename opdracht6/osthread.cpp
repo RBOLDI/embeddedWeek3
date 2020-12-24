@@ -4,8 +4,11 @@
 
 using namespace std;
 
-//WINDOW CLASS POINTERS
-WINDOW * mainwin, * childWin_1, * childWin_2, * childwinh;
+//Shared values
+uint8_t activeProgramIndex;
+bool stopPushed = false;
+bool switchPushed = false;
+char *currProgOutput;
 
 OsThread::OsThread() {
   
@@ -53,7 +56,6 @@ void OsThread::delay(long nMSec) {
 };
 
 void *OsThread::thread(void *pThreadData) {
-
 	OsThread *pThis;
 	bool bLed1;
 
@@ -66,12 +68,13 @@ void *OsThread::thread(void *pThreadData) {
 	// Ga door tot drukknop 1
 	while (true) {
 		// Toon unieke thread tekst
-		pThis->delay(400);
-
+		//pThis->delay(40);
 		// Wisselen?
 		if (pThis->oHwKnop_.pushed()) {
+			switchPushed = true;
 			closeCurrentWindow();
-			nextActiveWindow();
+			activeProgramIndex = nextActiveWindow();
+			
 			pThis->delay(400);
 			bLed1 = !bLed1;
 			if (bLed1) {
@@ -83,9 +86,14 @@ void *OsThread::thread(void *pThreadData) {
 				pThis->oLed2_.on();
 			}
 		};
-		windowManager();
+		if(newOutputAvailable == true){
+			//cout << progOutput[activeProgramIndex] << endl;
+			windowManager(progOutput[activeProgramIndex]);
+			newOutputAvailable = false;
+		}
 		// Stoppen?
-		if (pThis->oHwStop_.pushed()) {			
+		if (pThis->oHwStop_.pushed()) {	
+		  stopPushed = true;
 		  pThis->oLed1_.off();
 		  pThis->oLed2_.off();
 		  pthread_exit(NULL);

@@ -11,5 +11,4 @@
   //threads
   #include "osthread.hpp"
 
-
 #endif // _HWLAYER_HPP_

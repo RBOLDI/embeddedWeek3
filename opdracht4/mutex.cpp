@@ -38,13 +38,13 @@ int main(int nArgc, char* aArgv[]) {
 
   // Een tijdelijk loop om het effect van de mutex te laten zien
   for (i = 0; i < 25; i++) {
-    
+    thread_delay(750);
     pthread_mutex_lock(&oLockOutput);
     printf(" main %d ", i); fflush(stdout);
     //TODO: voeg een delay van 750 msec toe
     thread_delay(750);
     pthread_mutex_unlock(&oLockOutput);
-
+	printf(" sheesh\n"); fflush(stdout);
     thread_delay(750);
   };
   _bRunning = false;

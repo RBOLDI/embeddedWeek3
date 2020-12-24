@@ -7,20 +7,24 @@
 
 int main(int nArgc, char* aArgv[]) {
 
-  // Initialiseren
-  printf("w3.1.3hwlayer\n\n");
-  if (!bcm2835_init()) {
-    printf("BCM init error!\n");
-    return 1;
-  };
+	// Initialiseren
+	printf("w3.1.3hwlayer\n\n");
+	if (!bcm2835_init()) {
+		printf("BCM init error!\n");
+		return 1;
+	};
 
-  // Laad en start de OS hardware laag
-  OsThread oOsThread;
-  oOsThread.join();
+	startNcurses();
 
-  // Afsluiten na het wachten op de hoofdthread
-  bcm2835_close();
-  printf("\nAfgesloten :-)\n\n");
+	// Laad en start de OS hardware laag
+	OsThread oOsThread;
+	oOsThread.join();
 
-  return 0;
+
+	// Afsluiten na het wachten op de hoofdthread
+	closeNcurses();
+	bcm2835_close();
+	printf("\nAfgesloten :-)\n\n");
+
+	return 0;
 };

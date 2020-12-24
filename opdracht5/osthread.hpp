@@ -10,6 +10,7 @@
   #include <pthread.h>
   #include <iostream>
   //TODO: zorg dat de Knop en Led class bekend zijn
+  #include "ncursesio.hpp"
   #include "knop.hpp"
   #include "led.hpp"
 
