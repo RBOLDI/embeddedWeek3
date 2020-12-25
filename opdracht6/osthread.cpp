@@ -90,12 +90,15 @@ void *OsThread::thread(void *pThreadData) {
 			//cout << progOutput[activeProgramIndex] << endl;
 			windowManager(progOutput[activeProgramIndex]);
 			newOutputAvailable = false;
+			pThis->delay(40);
 		}
 		// Stoppen?
 		if (pThis->oHwStop_.pushed()) {	
+		  pthread_mutex_lock(&oLockInput);
 		  stopPushed = true;
 		  pThis->oLed1_.off();
 		  pThis->oLed2_.off();
+		  pthread_mutex_unlock(&oLockInput);
 		  pthread_exit(NULL);
 		};
 	};

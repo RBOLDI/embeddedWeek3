@@ -108,6 +108,7 @@ void *progThread::thread(void *pThreadData) {
 		file[currProg].open(filename);
 		file[currProg].getline(input, sizeof input);
 		pthread_mutex_unlock(&oLockInput);
+		pThis->delay(40);
 		lineNumber++;
 	}
 	while(filename != NULL && currProg != INVALID_INPUT){
@@ -118,6 +119,7 @@ void *progThread::thread(void *pThreadData) {
 			pthread_mutex_lock(&oLockInput);
 			file[currProg].close();
 			pthread_mutex_unlock(&oLockInput);
+			pThis->delay(40);
 			compProg[currProg].closeProgram();
 			pthread_exit(NULL);
 		}
@@ -128,6 +130,7 @@ void *progThread::thread(void *pThreadData) {
 			pthread_mutex_lock(&oLockOutput);
 			instruction = compProg[currProg].executeInstruction(tokens, lineNumber);
 			pthread_mutex_unlock(&oLockOutput);
+			pThis->delay(40);
 			/************************
 			WHILE LOOP
 			*************************/
@@ -141,11 +144,13 @@ void *progThread::thread(void *pThreadData) {
 				if(compProg[currProg].checkWhileConditions(while_expression, while_relationOperator, while_desiredState, lineNumber))
 					executeLoop_flag = true;
 				pthread_mutex_unlock(&oLockOutput);
+				pThis->delay(40);
 				//If conditons are true, execute loop until they are not true anymore
 				while(executeLoop_flag == true){
 					pthread_mutex_lock(&oLockInput);
 					file[currProg].getline(input, sizeof input);
 					pthread_mutex_unlock(&oLockInput);
+					pThis->delay(40);
 					lineNumber_cpy++;
 					if(pThis->parseObjct.tokenizer(input, tokens)){
 						if(!strcmp(tokens[0], "}")){
@@ -158,8 +163,10 @@ void *progThread::thread(void *pThreadData) {
 								pthread_mutex_lock(&oLockInput);
 								pThis->skipToLine(lineNumber, filename, currProg);
 								pthread_mutex_unlock(&oLockInput);
+								pThis->delay(40);
 							}
 							pthread_mutex_unlock(&oLockOutput);
+							pThis->delay(40);
 						}
 						else{
 							/************************
@@ -169,13 +176,17 @@ void *progThread::thread(void *pThreadData) {
 								pthread_mutex_lock(&oLockInput);
 								file[currProg].close();
 								pthread_mutex_unlock(&oLockInput);
-								compProg[currProg].closeProgram();
-								pthread_mutex_unlock(&oLockOutput);
+								pThis->delay(40);
+								//pthread_mutex_lock(&oLockOutput);
+								//compProg[currProg].closeProgram();
+								//pthread_mutex_unlock(&oLockOutput);
+								//pThis->delay(40);
 								pthread_exit(NULL);
 							}
 							pthread_mutex_lock(&oLockOutput);
 							compProg[currProg].executeInstruction(tokens, lineNumber_cpy);
 							pthread_mutex_unlock(&oLockOutput);
+							pThis->delay(40);
 						}
 					}
 				}
